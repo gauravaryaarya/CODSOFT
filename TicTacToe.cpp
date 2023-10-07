@@ -60,23 +60,34 @@ public:
         initializeBoard();
     }
 
-    void playRound() {
-        int move;
+   void playRound() {
+    int move;
+    bool validMove = false;
+    while(!validMove) {
         displayBoard();
         cout << ((currentPlayer == 'X') ? player1 : player2) << "'s turn. Enter your position (1-9): ";
         cin >> move;
 
+        if(cin.fail()) {
+            cin.clear();
+            cin.ignore(32767, '\n');
+            cout << "Please enter a valid number!" << endl;
+            continue;
+        }
+
         int x = (move - 1) / 3;
         int y = (move - 1) % 3;
 
-        if(move < 1 || move > 9 || board[x][y] == 'X' || board[x][y] == 'O') {
+        if(move >= 1 && move <= 9 && board[x][y] != 'X' && board[x][y] != 'O') {
+            validMove = true;
+            board[x][y] = currentPlayer;
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        } else {
             cout << "Invalid move!" << endl;
-            return playRound();
         }
-
-        board[x][y] = currentPlayer;
-        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
     }
+}
+
 
     void playGame() {
         cout << "Enter Player-1's Name (X): ";
